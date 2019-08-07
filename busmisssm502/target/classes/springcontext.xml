@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+	<!-- 配置扫描管理Bean的起始包名 -->
+	<context:component-scan base-package="com.neusoft.busmis"></context:component-scan>
+	<!-- 启用AspectJ支持 -->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- 取得SqlSessionFactory 
+	<bean id="sqlSessionFactory"  class="com.neusoft.busmis.factory.MyBatisFactory" factory-method="getSqlSessionFactory"   ></bean>
+	-->
+	
+	<!-- 配置DataSource -->
+	<!-- DBCP2连接池 -->
+	<bean id="dbcpds" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost:3317/busmis?serverTimezone=GMT%2B8"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+		<property name="initialSize" value="1"></property>
+		<property name="maxTotal" value="2"></property>
+	</bean>
+	<!-- C3p0连接池 -->
+	<bean id="c3p0ds" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	  <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+	  <property name="jdbcUrl" value="jdbc:mysql://localhost:3317/busmis?serverTimezone=GMT%2B8"></property>
+	  <property name="user" value="root"></property>
+	  <property name="password" value="root"></property>
+	  <property name="minPoolSize" value="1"></property>
+	  
+	  
+	</bean>
+	<!-- 配置MyBatis的SqlSessionFactory的工厂类 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="c3p0ds" />
+		<property name="configLocation" value="classpath:mybatis-config2.xml"></property>
+		<property name="mapperLocations" value="classpath:mappers/**/*.xml" />
+		<property name="typeAliasesPackage" value="com.neusoft.busmis.security.model"></property>
+	</bean>
+	
+	<!-- 配置创建DAO接口对象  单个Mapper接口注册方式，不推荐
+	<bean id="moduleDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	  <property name="mapperInterface" value="com.neusoft.busmis.security.dao.IModuleDao" />
+	  <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	  
+	</bean>
+	-->
+	<!-- 扫描Mapper接口方式 -->
+	<mybatis:scan base-package="com.neusoft.busmis.security.dao,com.neusoft.busmis.baseinfo.dao" />
+	
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<constructor-arg ref="c3p0ds" />
+	</bean>
+	
+	<!-- 配置事务管理切面 （环绕）如果配置的事务管理的ID="transactionManager" -->
+	<!-- 只要类有@Transactional注解 -->
+	<tx:annotation-driven />
+	
+	
+	
+	
+
+	
+	
+       
+    
+    
+
+</beans>

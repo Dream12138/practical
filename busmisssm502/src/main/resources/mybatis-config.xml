@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="logImpl" value="LOG4J"/>
+	</settings>
+
+	<typeAliases>
+	  <package name="com.neusoft.busmis.security.model"/>
+	</typeAliases>
+
+  <environments default="mysql">
+    <environment id="mysql">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3317/busmis?serverTimezone=GMT%2B8&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <property name="poolMaximumActiveConnections" value="5"/>
+        <property name="poolMaximumIdleConnections" value="1"/>
+        <property name="poolTimeToWait" value="3000"/>
+      </dataSource>
+    </environment>
+    
+    <environment id="oracle">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@10.1.53.4:1521:neusoft"/>
+        <property name="username" value="busmis"/>
+        <property name="password" value="busmis"/>
+        <property name="poolMaximumActiveConnections" value="5"/>
+        <property name="poolMaximumIdleConnections" value="1"/>
+        <property name="poolTimeToWait" value="3000"/>
+      </dataSource>
+    </environment>
+    
+    <environment id="product">
+      <transactionManager type="JDBC"/>
+      <dataSource type="JNDI">
+        <property name="data_source" value="java:comp/env/c3p0"/>
+       
+      </dataSource>
+    </environment>
+    
+  </environments>
+  <mappers>
+    <mapper resource="mappers/security/IUserDao.xml"/>
+    <mapper resource="mappers/security/IModuleDao.xml"/>
+    <mapper resource="mappers/security/IRoleDao.xml"/>
+    <mapper resource="mappers/security/IFunctionDao.xml"/>
+    
+  </mappers>
+</configuration>

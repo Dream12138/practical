@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neusoft.busmis.security.dao.IUserDao">
+
+  <insert id="create">
+  	insert into userinfo value (#{id}, #{password}, #{name}, #{role}, #{age}, #{joinDate}, 'N')
+  </insert>
+  
+  <update id="update">
+  	update userinfo set UserPassword = #{password}, UserName = #{name}, 
+  	UserRole = #{role}, Age = #{age}, JoinDate = #{joinDate}
+  	where USERID = #{id}
+  </update>
+  
+  <delete id="delete">
+  	delete from userinfo where USERID = #{id}
+  </delete>
+  
+</mapper>
